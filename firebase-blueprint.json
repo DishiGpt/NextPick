@@ -1,0 +1,88 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "User profile information",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "email": { "type": "string" },
+        "displayName": { "type": "string" },
+        "photoURL": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email", "createdAt"]
+    },
+    "RecommendationBatch": {
+      "title": "RecommendationBatch",
+      "description": "A generated recommendation history batch containing books, TV series, and a movie",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "inputs": {
+          "type": "object",
+          "properties": {
+            "booksRead": { "type": "array", "items": { "type": "string" } },
+            "showsWatched": { "type": "array", "items": { "type": "string" } },
+            "genre": { "type": "string" },
+            "tropes": { "type": "array", "items": { "type": "string" } },
+            "specificDetails": { "type": "string" }
+          },
+          "required": ["genre", "specificDetails"]
+        },
+        "results": {
+          "type": "object",
+          "properties": {
+            "books": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "title": { "type": "string" },
+                  "author": { "type": "string" },
+                  "whyYouWillLoveIt": { "type": "string" },
+                  "platforms": { "type": "array", "items": { "type": "string" } }
+                },
+                "required": ["title", "author", "whyYouWillLoveIt", "platforms"]
+              }
+            },
+            "series": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "title": { "type": "string" },
+                  "whyYouWillLoveIt": { "type": "string" },
+                  "platforms": { "type": "array", "items": { "type": "string" } }
+                },
+                "required": ["title", "whyYouWillLoveIt", "platforms"]
+              }
+            },
+            "movie": {
+              "type": "object",
+              "properties": {
+                "title": { "type": "string" },
+                "whyYouWillLoveIt": { "type": "string" },
+                "platforms": { "type": "array", "items": { "type": "string" } }
+              },
+              "required": ["title", "whyYouWillLoveIt", "platforms"]
+            }
+          },
+          "required": ["books", "series", "movie"]
+        }
+      },
+      "required": ["userId", "createdAt", "inputs", "results"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "User profiles"
+    },
+    "/users/{userId}/recommendations/{recommendationId}": {
+      "schema": "RecommendationBatch",
+      "description": "Generated personalized recommendations history for each user"
+    }
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "name": "NextPick",
+  "description": "Bespoke personal curator matching books, TV shows, and movie masterpieces to your custom genres and vibes using Gemini AI structured search listings.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
