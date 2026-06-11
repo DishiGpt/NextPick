@@ -6,3 +6,9 @@ coverage/
 *.log
 .env*
 !.env.example
+
+# Firebase configuration & private keys
+firebase-applet-config.json
+
+# Local storage and history backup cache
+backup-history.json

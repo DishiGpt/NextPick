@@ -1,14 +1,31 @@
+/// <reference types="vite/client" />
 import { initializeApp, getApps, getApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, User as FirebaseUser } from "firebase/auth";
 import { getFirestore, collection, addDoc, getDocs, query, orderBy } from "firebase/firestore";
-import firebaseConfig from "../firebase-applet-config.json";
+// Safely check and load local config file using a glob to prevent compilation failure if missing when clonned from git
+const configFiles = import.meta.glob("../firebase-applet-config.json", { eager: true });
+const firebaseConfigFile = configFiles["../firebase-applet-config.json"]
+  ? (configFiles["../firebase-applet-config.json"] as any).default
+  : null;
+
+const firebaseConfig = firebaseConfigFile || {
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || "MOCK_API_KEY",
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || "mock-project.firebaseapp.com",
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || "mock-project",
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || "mock-project.firebasestorage.app",
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || "",
+  appId: import.meta.env.VITE_FIREBASE_APP_ID || "",
+  firestoreDatabaseId: import.meta.env.VITE_FIREBASE_FIRESTORE_DATABASE_ID || "default"
+};
+
 import { VibeUser, RecommendationBatch } from "./types";
 
 // Determine if Firebase config is uninitialized or a placeholder mock
 export const isFirebaseMock = 
   !firebaseConfig || 
   firebaseConfig.apiKey === "MOCK_API_KEY" || 
-  firebaseConfig.projectId === "mock-project";
+  firebaseConfig.projectId === "mock-project" ||
+  !firebaseConfig.apiKey;
 
 let dbInstance: any = null;
 let authInstance: any = null;
